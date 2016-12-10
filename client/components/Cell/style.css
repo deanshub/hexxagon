@@ -25,3 +25,13 @@
 .player2{
   background-color: blue;
 }
+
+.suggestClose{
+  border: 1px solid green;
+}
+.suggestFar{
+  border: 1px solid yellow;
+}
+.selected{
+  border: 1px solid pink;
+}

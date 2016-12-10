@@ -1,19 +1,23 @@
 
 import React, { Component } from 'react'
-// import { bindActionCreators } from 'redux'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import classnames from 'classnames'
 import Board from '../../components/Board'
 import style from './style.css'
+import * as BoardActions from '../../reducers/board'
 
 class App extends Component {
   render() {
     // const { board, actions, children } = this.props
-    const { board } = this.props
+    const { board, actions } = this.props
 
     return (
       <div className={classnames(style.container)}>
-        <Board data={board} />
+        <Board
+            data={board}
+            selectPawn={actions.selectPawn}
+        />
       </div>
     )
   }
@@ -25,10 +29,9 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps() {
-// function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
-    // actions: bindActionCreators(TodoActions, dispatch)
+    actions: bindActionCreators(BoardActions, dispatch)
   }
 }
 

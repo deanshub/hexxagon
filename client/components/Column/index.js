@@ -7,6 +7,8 @@ import EmptyCell from '../Cell/EmptyCell'
 export default class Column extends Component {
   static propTypes = {
     data: PropTypes.array,
+    selectPawn: PropTypes.func,
+    x: PropTypes.number.isRequired,
   }
 
   // constructor(props, context) {
@@ -34,8 +36,7 @@ export default class Column extends Component {
     }
   }
   render() {
-    // const {todo, completeTodo, deleteTodo} = this.props
-    const {data} = this.props
+    const {data, selectPawn, x} = this.props
 
     return (
       <div className={classnames(style.container)}>
@@ -45,6 +46,9 @@ export default class Column extends Component {
             <Cell
                 data={cell}
                 key={index}
+                selectPawn={selectPawn}
+                x={x}
+                y={index+1}
             />
           )
         }

@@ -7,6 +7,7 @@ import EmptyColumn from '../Column/emptyColumn'
 export default class Board extends Component {
   static propTypes = {
     data: PropTypes.array,
+    selectPawn: PropTypes.func,
   }
 
   static defaultProps = {
@@ -35,7 +36,7 @@ export default class Board extends Component {
 
   render() {
     // const {todo, completeTodo, deleteTodo} = this.props
-    const {data} = this.props
+    const {data, selectPawn} = this.props
 
     return (
       <div className={classnames(style.container)}>
@@ -44,6 +45,8 @@ export default class Board extends Component {
             <Column
                 data={column}
                 key={index}
+                selectPawn={selectPawn}
+                x={index+1}
             />
           )
         }
