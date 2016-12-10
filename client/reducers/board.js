@@ -1,46 +1,38 @@
 
 import { handleActions, createAction } from 'redux-actions'
 import boardInitialState from './boardInitialState'
+import * as boardHelper from './boardHelper'
 
 const initialState = boardInitialState
 
 export default handleActions({
   'select pawn' (state, action) {
-    let suggestClose = false
-    let suggestFar = false
-    console.log(state)
-    // action.payload.x
-    // action.payload.y
+    const selectedPawn = action.payload
+    const statePawnData = state[selectedPawn.x-1][selectedPawn.y-1]
 
-    return state.map((column, columnIndex)=>{
-      const x = columnIndex + 1
-      if (x+1===action.payload.x || x-1===action.payload.x || x===action.payload.x){
-        suggestClose = true
-      }else if(x+2===action.payload.x || x-2===action.payload.x){
-        suggestFar = true
-      }
-
-      if (suggestClose||suggestFar){
+    if (statePawnData && statePawnData.player!==0){
+      return state.map((column, columnIndex)=>{
         return column.map((cell, cellIndex)=>{
-          const y = cellIndex + 1
-          if (y+1===action.payload.y || y-1===action.payload.y || y===action.payload.y){
-            if (y===action.payload.y && x===action.payload.x){
-              return Object.assign({}, cell, {selected: true})
-            }else if (suggestClose){
-              return Object.assign({}, cell, {suggestClose: true})
-            }else{
-              return Object.assign({}, cell, {suggestFar: true})
+          if (cell && cell.player!==undefined){
+            const suggested =
+              boardHelper.isSuggested(selectedPawn, {x:columnIndex+1, y:cellIndex+1})
+            if (suggested===boardHelper.SELECTED){
+              return Object.assign({}, cell, {[boardHelper.SELECTED]: true})
+            }else if(suggested===boardHelper.SUGGEST_FAR){
+              return Object.assign({}, cell, {[boardHelper.SUGGEST_FAR]: true})
+            }else if(suggested===boardHelper.SUGGEST_CLOSE){
+              return Object.assign({}, cell, {[boardHelper.SUGGEST_CLOSE]: true})
             }
-          }else if(suggestClose && (y+2===action.payload.y || y-2===action.payload.y)){
-            return Object.assign({}, cell, {suggestFar: true})
-          }else{
-            return cell
           }
+          return Object.assign({}, cell, {
+            [boardHelper.SELECTED]: false,
+            [boardHelper.SUGGEST_CLOSE]: false,
+            [boardHelper.SUGGEST_FAR]: false,
+          })
         })
-      }else{
-        return column
-      }
-    })
+      })
+    }
+    return state
   },
 }, initialState)
 
