@@ -10,7 +10,7 @@ export default handleActions({
     const selectedPawn = action.payload
     const statePawnData = state[selectedPawn.x-1][selectedPawn.y-1]
 
-    if (statePawnData && statePawnData.player!==0){
+    if (statePawnData && statePawnData.player!==0 && statePawnData.player!==undefined){
       return state.map((column, columnIndex)=>{
         return column.map((cell, cellIndex)=>{
           if (cell && cell.player!==undefined){
