@@ -1,0 +1,27 @@
+.cell{
+  flex: 1;
+  text-align: center;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  position: relative;
+  width: 150%;
+  /*border: 1px solid #2f2f2f;*/
+}
+.emptyCell{
+  flex: 0.5;
+}
+
+.blank{
+  background-color: black;
+}
+
+.empty{
+  background-color: grey;
+}
+
+.player1{
+  background-color: red;
+}
+
+.player2{
+  background-color: blue;
+}
