@@ -3,52 +3,49 @@ import classnames from 'classnames'
 import style from './style.css'
 import Column from '../Column'
 import EmptyColumn from '../Column/emptyColumn'
+import * as boardHelper from '../../reducers/boardHelper'
 
 export default class Board extends Component {
   static propTypes = {
     data: PropTypes.array,
     selectPawn: PropTypes.func,
+    selectedPawn: PropTypes.object,
+    turn: PropTypes.string,
   }
 
   static defaultProps = {
     data: [],
   }
 
-  // constructor(props, context) {
-  //   super(props, context)
-  //   this.state = {
-  //     editing: false
-  //   }
-  // }
-
-  // handleDoubleClick() {
-  //   this.setState({ editing: true })
-  // }
-
-  // handleSave(id, text) {
-  //   if (text.length === 0) {
-  //     this.props.deleteTodo(id)
-  //   } else {
-  //     this.props.editTodo({ id, text })
-  //   }
-  //   this.setState({ editing: false })
-  // }
-
   render() {
-    // const {todo, completeTodo, deleteTodo} = this.props
-    const {data, selectPawn} = this.props
+    const {data, selectPawn, selectedPawn} = this.props
 
     return (
       <div className={classnames(style.container)}>
         {
-          data.map((column, index)=>
-            <Column
-                data={column}
-                key={index}
-                selectPawn={selectPawn}
-                x={index+1}
-            />
-          )
+          data.map((column, index)=>{
+            const x = index+1
+            if (selectedPawn && boardHelper.isSuggested({x,y:0},{x:selectedPawn.x,y:0})!==undefined){
+              return (
+                <Column
+                    data={column}
+                    key={index}
+                    selectPawn={selectPawn}
+                    selectedPawn={selectedPawn}
+                    x={x}
+                />
+              )
+            }else{
+              return (
+                <Column
+                    data={column}
+                    key={index}
+                    selectPawn={selectPawn}
+                    x={x}
+                />
+              )
+            }
+          })
         }
         <EmptyColumn/>
       </div>

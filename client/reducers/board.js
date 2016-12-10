@@ -8,31 +8,27 @@ const initialState = boardInitialState
 export default handleActions({
   'select pawn' (state, action) {
     const selectedPawn = action.payload
-    const statePawnData = state[selectedPawn.x-1][selectedPawn.y-1]
+    const statePawnData = state.data[selectedPawn.x-1][selectedPawn.y-1]
 
     if (statePawnData && statePawnData.player!==0 && statePawnData.player!==undefined){
-      return state.map((column, columnIndex)=>{
-        return column.map((cell, cellIndex)=>{
-          if (cell && cell.player!==undefined){
-            const suggested =
-              boardHelper.isSuggested(selectedPawn, {x:columnIndex+1, y:cellIndex+1})
-            if (suggested===boardHelper.SELECTED){
-              return Object.assign({}, cell, {[boardHelper.SELECTED]: true})
-            }else if(suggested===boardHelper.SUGGEST_FAR){
-              return Object.assign({}, cell, {[boardHelper.SUGGEST_FAR]: true})
-            }else if(suggested===boardHelper.SUGGEST_CLOSE){
-              return Object.assign({}, cell, {[boardHelper.SUGGEST_CLOSE]: true})
-            }
-          }
-          return Object.assign({}, cell, {
-            [boardHelper.SELECTED]: false,
-            [boardHelper.SUGGEST_CLOSE]: false,
-            [boardHelper.SUGGEST_FAR]: false,
-          })
+      return Object.assign({}, state, {selectedPawn})
+    }else if (state.selectedPawn){
+      const selectedPawnData = state.data[state.selectedPawn.x-1][state.selectedPawn.y-1]
+
+      const suggestion = boardHelper.isSuggested(state.selectedPawn, selectedPawn)
+      if(suggestion === boardHelper.SUGGEST_CLOSE){
+        return Object.assign({}, state,{
+          data: boardHelper.duplicatePawn(state.data, selectedPawn, selectedPawnData),
+          selectedPawn: undefined,
         })
-      })
+      }else if(suggestion === boardHelper.SUGGEST_FAR){
+        return Object.assign({}, state,{
+          data: boardHelper.movePawn(state.data, selectedPawn, selectedPawnData, state.selectedPawn),
+          selectedPawn: undefined,
+        })
+      }
     }
-    return state
+    return Object.assign({}, state, {selectedPawn:undefined})
   },
 }, initialState)
 

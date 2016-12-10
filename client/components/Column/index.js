@@ -3,12 +3,18 @@ import classnames from 'classnames'
 import style from './style.css'
 import Cell from '../Cell'
 import EmptyCell from '../Cell/EmptyCell'
+import * as boardHelper from '../../reducers/boardHelper'
 
 export default class Column extends Component {
   static propTypes = {
     data: PropTypes.array,
     selectPawn: PropTypes.func,
+    selectedPawn: PropTypes.object,
     x: PropTypes.number.isRequired,
+  }
+
+  static defaultProps = {
+    selectedPawn:{},
   }
 
   // constructor(props, context) {
@@ -36,21 +42,28 @@ export default class Column extends Component {
     }
   }
   render() {
-    const {data, selectPawn, x} = this.props
+    const {data, selectPawn, selectedPawn, x} = this.props
 
     return (
       <div className={classnames(style.container)}>
         {this.getEmptyCellIfNeeded(data.length)}
         {
-          data.map((cell, index)=>
-            <Cell
-                data={cell}
-                key={index}
-                selectPawn={selectPawn}
-                x={x}
-                y={index+1}
-            />
-          )
+          data.map((cell, index)=>{
+            const y = index+1
+            const suggestion = boardHelper.isSuggested(selectedPawn, {x,y})
+            return (
+              <Cell
+                  data={cell}
+                  key={index}
+                  selectPawn={selectPawn}
+                  selected={suggestion===boardHelper.SELECTED}
+                  suggestClose={suggestion===boardHelper.SUGGEST_CLOSE}
+                  suggestFar={suggestion===boardHelper.SUGGEST_FAR}
+                  x={x}
+                  y={y}
+              />
+            )
+          })
         }
         {this.getEmptyCellIfNeeded(data.length)}
       </div>

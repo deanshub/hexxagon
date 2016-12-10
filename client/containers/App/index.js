@@ -15,8 +15,9 @@ class App extends Component {
     return (
       <div className={classnames(style.container)}>
         <Board
-            data={board}
+            data={board.data}
             selectPawn={actions.selectPawn}
+            selectedPawn={board.selectedPawn}
         />
       </div>
     )
