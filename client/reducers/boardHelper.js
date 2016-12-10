@@ -16,19 +16,44 @@ export const isSuggested = ({x:x1,y:y1}, {x:x2,y:y2})=>{
   }
 }
 
-export const duplicatePawn = (board, {x,y}, pawnData)=>{
+export const putPawn = (board, {x,y}, pawnData)=>{
   const oldColumn = board[x-1]
   const newColumn = [
     ...oldColumn.slice(0, y-1),
     pawnData,
     ...oldColumn.slice(y),
   ]
-  return [
+  const newBoard = [
     ...board.slice(0, x-1),
     newColumn,
     ...board.slice(x),
   ]
+  return newBoard
 }
+export const duplicatePawn = (board, {x,y}, pawnData)=>{
+  let newBoard = putPawn(board, {x,y}, pawnData)
+  const pawnAt1 = newBoard[x+1][y]
+  const pawnAt2 = newBoard[x+1][y+1]
+  const pawnAt3 = newBoard[x][y+1]
+  const pawnAt4 = newBoard[x-1][y]
+  const pawnAt5 = newBoard[x-1][y-1]
+  const pawnAt6 = newBoard[x][y-1]
+  if (pawnAt1 && pawnAt1.player && pawnAt1.player!==0 && pawnAt1.player!==pawnData.player){
+    newBoard = putPawn(newBoard, {x:x+1,y}, pawnData)
+  }else if (pawnAt2 && pawnAt2.player && pawnAt2.player!==0 && pawnAt2.player!==pawnData.player){
+    newBoard = putPawn(newBoard, {x:x+1,y:y+1}, pawnData)
+  }else if (pawnAt3 && pawnAt3.player && pawnAt3.player!==0 && pawnAt3.player!==pawnData.player){
+    newBoard = putPawn(newBoard, {x,y:y+1}, pawnData)
+  }else if (pawnAt4 && pawnAt4.player && pawnAt4.player!==0 && pawnAt4.player!==pawnData.player){
+    newBoard = putPawn(newBoard, {x:x-1,y}, pawnData)
+  }else if (pawnAt5 && pawnAt5.player && pawnAt5.player!==0 && pawnAt5.player!==pawnData.player){
+    newBoard = putPawn(newBoard, {x:x-1,y:y-1}, pawnData)
+  }else if (pawnAt6 && pawnAt6.player && pawnAt6.player!==0 && pawnAt6.player!==pawnData.player){
+    newBoard = putPawn(newBoard, {x,y:y-1}, pawnData)
+  }
+  return newBoard
+}
+
 export const movePawn = (board, {x:xDest,y:yDest}, pawnData, {x:xSource,y:ySource})=>{
   const oldColumnSource = board[xSource-1]
   const newColumnSource = [
@@ -42,15 +67,5 @@ export const movePawn = (board, {x:xDest,y:yDest}, pawnData, {x:xSource,y:ySourc
     ...board.slice(xSource),
   ]
 
-  const oldColumnDest = boardWithoutSource[xDest-1]
-  const newColumnDest = [
-    ...oldColumnDest.slice(0, yDest-1),
-    pawnData,
-    ...oldColumnDest.slice(yDest),
-  ]
-  return [
-    ...boardWithoutSource.slice(0, xDest-1),
-    newColumnDest,
-    ...boardWithoutSource.slice(xDest),
-  ]
+  return duplicatePawn(boardWithoutSource, {x:xDest,y: yDest}, pawnData)
 }
