@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import style from './style.css'
 import Column from '../Column'
 import EmptyColumn from '../Column/emptyColumn'
-import * as boardHelper from '../../reducers/boardHelper'
+import * as boardHelper from '../../ducks/board/boardHelper'
 
 export default class Board extends Component {
   static propTypes = {

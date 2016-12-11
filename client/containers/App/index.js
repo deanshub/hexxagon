@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import classnames from 'classnames'
 import Board from '../../components/Board'
 import style from './style.css'
-import * as BoardActions from '../../reducers/board'
+import * as BoardActions from '../../ducks/board'
 
 class App extends Component {
   render() {

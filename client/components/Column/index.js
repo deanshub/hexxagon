@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import style from './style.css'
 import Cell from '../Cell'
 import EmptyCell from '../Cell/EmptyCell'
-import * as boardHelper from '../../reducers/boardHelper'
+import * as boardHelper from '../../ducks/board/boardHelper'
 
 export default class Column extends Component {
   static propTypes = {
