@@ -1,0 +1,6 @@
+#!/bin/bash
+GIT_WORK_TREE=~/Desktop/apps/hexxagon git checkout -f
+cd ~/Desktop/apps/hexxagon
+nvm use 6.2.2
+yarn
+yarn run build
