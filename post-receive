@@ -1,6 +1,7 @@
 #!/bin/bash
 GIT_WORK_TREE=~/Desktop/apps/hexxagon git checkout -f
-cd ~/Desktop/apps/hexxagon
+pushd ~/Desktop/apps/hexxagon
 nvm use 7.2.0
 yarn
 yarn run build
+popd
