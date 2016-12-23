@@ -24,15 +24,14 @@ export default class Board extends Component {
       <div className={classnames(style.container)}>
         {
           data.map((column, index)=>{
-            const x = index+1
-            if (selectedPawn && boardHelper.isSuggested({x,y:0},{x:selectedPawn.x,y:0})!==undefined){
+            if (selectedPawn && boardHelper.isSuggested({x:index,y:0},{x:selectedPawn.x,y:0})!==undefined){
               return (
                 <Column
                     data={column}
                     key={index}
                     selectPawn={selectPawn}
                     selectedPawn={selectedPawn}
-                    x={x}
+                    x={index}
                 />
               )
             }else{
@@ -41,7 +40,7 @@ export default class Board extends Component {
                     data={column}
                     key={index}
                     selectPawn={selectPawn}
-                    x={x}
+                    x={index}
                 />
               )
             }

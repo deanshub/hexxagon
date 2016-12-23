@@ -49,8 +49,7 @@ export default class Column extends Component {
         {this.getEmptyCellIfNeeded(data.length)}
         {
           data.map((cell, index)=>{
-            const y = index+1
-            const suggestion = boardHelper.isSuggested(selectedPawn, {x,y})
+            const suggestion = boardHelper.isSuggested(selectedPawn, {x,y:index})
             return (
               <Cell
                   data={cell}
@@ -60,7 +59,7 @@ export default class Column extends Component {
                   suggestClose={suggestion===boardHelper.SUGGEST_CLOSE}
                   suggestFar={suggestion===boardHelper.SUGGEST_FAR}
                   x={x}
-                  y={y}
+                  y={index}
               />
             )
           })

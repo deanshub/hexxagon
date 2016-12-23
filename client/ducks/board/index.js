@@ -8,14 +8,15 @@ const initialState = boardInitialState
 export default handleActions({
   'select pawn' (state, action) {
     const selectedPawn = action.payload
-    const statePawnData = state.data[selectedPawn.x-1][selectedPawn.y-1]
+    const statePawnData = state.data[selectedPawn.x][selectedPawn.y]
 
     if (statePawnData && statePawnData.player!==0 && statePawnData.player!==undefined){
       return Object.assign({}, state, {selectedPawn})
     }else if (state.selectedPawn){
-      const selectedPawnData = state.data[state.selectedPawn.x-1][state.selectedPawn.y-1]
+      const selectedPawnData = state.data[state.selectedPawn.x][state.selectedPawn.y]
 
       const suggestion = boardHelper.isSuggested(state.selectedPawn, selectedPawn)
+      console.log(state.selectedPawn, selectedPawn);
       if(suggestion === boardHelper.SUGGEST_CLOSE){
         return Object.assign({}, state,{
           data: boardHelper.duplicatePawn(state.data, selectedPawn, selectedPawnData),

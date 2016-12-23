@@ -35,9 +35,7 @@ export default class Cell extends Component {
   }
 
   render() {
-    // const {todo, completeTodo, deleteTodo} = this.props
     const {data, selectPawn, x, y, suggestClose, suggestFar, selected} = this.props
-    // const {data, selectPawn, x, y} = this.props
 
     return (
       <div
