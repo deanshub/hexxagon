@@ -37,34 +37,52 @@ export default class Column extends Component {
   //   this.setState({ editing: false })
   // }
   getEmptyCellIfNeeded(length){
-    if (length%2==0){
+    if (length%2===0){
       return (<EmptyCell/>)
     }
   }
   render() {
     const {data, selectPawn, selectedPawn, x} = this.props
 
+    let initialEmpty = 0
+    let cell = data[initialEmpty]
+    while (initialEmpty<data.length && cell===undefined){
+      initialEmpty++
+      cell = data[initialEmpty]
+    }
+
+    const reversedData = [...data].reverse()
+    let lastEmpty = 0
+    cell = reversedData[lastEmpty]
+
+    while (lastEmpty<reversedData.length && cell===undefined){
+      lastEmpty++
+      cell = reversedData[lastEmpty]
+    }
+
     return (
       <div className={classnames(style.container)}>
-        {this.getEmptyCellIfNeeded(data.length)}
+        {(new Array(initialEmpty).fill(0)).map(()=><EmptyCell/>)}
+        {(new Array(lastEmpty).fill(0)).map(()=><EmptyCell/>)}
         {
-          data.map((cell, index)=>{
-            const suggestion = boardHelper.isSuggested(selectedPawn, {x,y:index})
+          data.slice(initialEmpty, data.length-lastEmpty).map((cell, index)=>{
+            const suggestion = boardHelper.isSuggested(selectedPawn, {x,y:index+initialEmpty})
             return (
               <Cell
                   data={cell}
-                  key={index}
+                  key={index+initialEmpty}
                   selectPawn={selectPawn}
                   selected={suggestion===boardHelper.SELECTED}
                   suggestClose={suggestion===boardHelper.SUGGEST_CLOSE}
                   suggestFar={suggestion===boardHelper.SUGGEST_FAR}
                   x={x}
-                  y={index}
+                  y={index+initialEmpty}
               />
             )
           })
         }
-        {this.getEmptyCellIfNeeded(data.length)}
+        {(new Array(initialEmpty).fill(0)).map(()=><EmptyCell/>)}
+        {(new Array(lastEmpty).fill(0)).map(()=><EmptyCell/>)}
       </div>
     )
   }

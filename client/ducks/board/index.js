@@ -11,12 +11,13 @@ export default handleActions({
     const statePawnData = state.data[selectedPawn.x][selectedPawn.y]
 
     if (statePawnData && statePawnData.player!==0 && statePawnData.player!==undefined){
+      // console.log(boardHelper.getNighborsXY(selectedPawn.x, selectedPawn.y));
       return Object.assign({}, state, {selectedPawn})
     }else if (state.selectedPawn){
       const selectedPawnData = state.data[state.selectedPawn.x][state.selectedPawn.y]
 
       const suggestion = boardHelper.isSuggested(state.selectedPawn, selectedPawn)
-      console.log(state.selectedPawn, selectedPawn);
+      // console.log(state.selectedPawn, selectedPawn);
       if(suggestion === boardHelper.SUGGEST_CLOSE){
         return Object.assign({}, state,{
           data: boardHelper.duplicatePawn(state.data, selectedPawn, selectedPawnData),

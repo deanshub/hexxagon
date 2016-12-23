@@ -4,24 +4,39 @@ export const SUGGEST_FAR = 'suggestFar'
 
 export const getNighborsXY=(x,y)=>{
   return [
-    {x:x+1,y},
-    {x:x+1,y:y-1},
-    {x,y:y+1},
-    {x:x-1,y},
-    {x:x-1,y:y-1},
     {x,y:y-1},
+    {x:x+1,y:y-1},
+    {x:x+1,y},
+    {x,y:y+1},
+    {x:x-1,y:y+1},
+    {x:x-1,y},
   ]
+  // if (y%2===0){
+  //   return [
+  //     {x:x+1,y},
+  //     {x:x+1,y:y-1},
+  //     {x,y:y+1},
+  //     {x:x-1,y},
+  //     {x:x-1,y:y-1},
+  //     {x,y:y-1},
+  //   ]
+  // }else{
+  //   return [
+  //     {x,y:y-1},
+  //     {x:x+1,y},
+  //     {x:x+1,y:y+1},
+  //     {x,y:y+1},
+  //     {x:x-1,y:y+1},
+  //     {x:x-1,y},
+  //   ]
+  // }
 }
 
 export const isSuggestedClose=({x:x1,y:y1},{x:x2,y:y2})=>{
-  const nighbors={
-    [`${x1+1}${y1}`]: true,
-    [`${x1+1}${y1-1}`]: true,
-    [`${x1}${y1+1}`]: true,
-    [`${x1-1}${y1}`]: true,
-    [`${x1-1}${y1-1}`]: true,
-    [`${x1}${y1-1}`]: true,
-  }
+  const nighbors= getNighborsXY(x1,y1).reduce((res, cur)=>{
+    res[`${cur.x}${cur.y}`]=true
+    return res
+  },{})
 
   return nighbors[`${x2}${y2}`]===true
 }
@@ -31,30 +46,14 @@ export const isSuggested = ({x:x1,y:y1}, {x:x2,y:y2})=>{
     return SELECTED
   }else if (isSuggestedClose({x:x1,y:y1}, {x:x2,y:y2})){
     return SUGGEST_CLOSE
-  } else{
+  }else{
     const farNighbor = getNighborsXY(x1,y1).filter(point=>{
       return isSuggestedClose(point,{x:x2,y:y2})
     })
     if (farNighbor.length>0){
-      console.log(farNighbor);
       return SUGGEST_FAR
     }
   }
-
-
-  // const xDist = Math.abs(x2-x1)
-  // const yDist = Math.abs(y2-y1)
-  // const totalDist = xDist+yDist
-
-
-  // if (totalDist === 0){
-  //   return SELECTED
-  // }else if (totalDist===1)){
-  //   return SUGGEST_CLOSE
-  // }
-  // else if (totalDist === 2){
-  //   return SUGGEST_FAR
-  // }
 }
 
 export const putPawn = (board, {x,y}, pawnData)=>{
@@ -71,27 +70,16 @@ export const putPawn = (board, {x,y}, pawnData)=>{
   ]
   return newBoard
 }
+
 export const duplicatePawn = (board, {x,y}, pawnData)=>{
   let newBoard = putPawn(board, {x,y}, pawnData)
-  const pawnAt1 = newBoard[x+1]?newBoard[x+1][y]:undefined
-  const pawnAt2 = newBoard[x+1]?newBoard[x+1][y-1]:undefined
-  const pawnAt3 = newBoard[x]?newBoard[x][y+1]:undefined
-  const pawnAt4 = newBoard[x-1]?newBoard[x-1][y]:undefined
-  const pawnAt5 = newBoard[x-1]?newBoard[x-1][y-1]:undefined
-  const pawnAt6 = newBoard[x]?newBoard[x][y-1]:undefined
-  if (pawnAt1 && pawnAt1.player && pawnAt1.player!==0 && pawnAt1.player!==pawnData.player){
-    newBoard = putPawn(newBoard, {x:x+1,y}, pawnData)
-  }else if (pawnAt2 && pawnAt2.player && pawnAt2.player!==0 && pawnAt2.player!==pawnData.player){
-    newBoard = putPawn(newBoard, {x:x+1,y:y-1}, pawnData)
-  }else if (pawnAt3 && pawnAt3.player && pawnAt3.player!==0 && pawnAt3.player!==pawnData.player){
-    newBoard = putPawn(newBoard, {x,y:y+1}, pawnData)
-  }else if (pawnAt4 && pawnAt4.player && pawnAt4.player!==0 && pawnAt4.player!==pawnData.player){
-    newBoard = putPawn(newBoard, {x:x-1,y}, pawnData)
-  }else if (pawnAt5 && pawnAt5.player && pawnAt5.player!==0 && pawnAt5.player!==pawnData.player){
-    newBoard = putPawn(newBoard, {x:x-1,y:y-1}, pawnData)
-  }else if (pawnAt6 && pawnAt6.player && pawnAt6.player!==0 && pawnAt6.player!==pawnData.player){
-    newBoard = putPawn(newBoard, {x,y:y-1}, pawnData)
-  }
+
+  getNighborsXY(x,y).filter(point=>{
+    return (newBoard[point.x]&&newBoard[point.x][point.y]&& newBoard[point.x][point.y].player!==0&&newBoard[point.x][point.y]!==pawnData.player)
+  }).forEach(point=>{
+    newBoard = putPawn(newBoard, point, pawnData)
+  })
+
   return newBoard
 }
 

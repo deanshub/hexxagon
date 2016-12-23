@@ -41,7 +41,9 @@ export default class Cell extends Component {
       <div
           className={classnames(getCellClasses(data.player, selected, suggestClose, suggestFar))}
           onClick={()=>selectPawn({x, y})}
-      />
+      >
+      {x},{y}
+      </div>
     )
   }
 }
