@@ -1,4 +1,5 @@
 #!/bin/bash
+source ~/.bashrc
 GIT_WORK_TREE=~/Desktop/apps/hexxagon git checkout -f
 pushd ~/Desktop/apps/hexxagon
 nvm use 7.2.0
